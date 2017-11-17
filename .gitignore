@@ -1,6 +1,7 @@
 composer.phar
 phpunit.phar
-/tests/
+/test/
 /vendor/
 .idea
 .env
+debug.log

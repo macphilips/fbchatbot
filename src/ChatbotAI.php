@@ -12,22 +12,20 @@ class ChatbotAI
 
     protected $apiClient;
     protected $config;
-    protected $foreignExchangerate;
-    protected $witClient;
     private $log;
+    private $governors;
 
     /**
      * ChatbotAI constructor.
      * @param $config
      */
-    public function __construct($config)
+    public function __construct($config, $governors)
     {
+        $this->governors = $governors;
         $this->config = $config;
         $this->log = new Logger('general');
         $this->log->pushHandler(new StreamHandler('debug.log'));
-        $this->apiClient = new Client($this->config['apiai_token']);
-        $this->witClient = new \Tgallice\Wit\Client($this->config['witai_token']);
-        $this->foreignExchangerate = new ForeignExchangeRate();
+        $this->log->debug();
     }
 
     /**
@@ -40,64 +38,24 @@ class ChatbotAI
 
         if (preg_match('[hi|hey|hello]', strtolower($message))) {
             return 'Hi, nice to meet you!';
+        } elseif (preg_match('[What is today[\'s] date|What day is it|date|What day is it?]', strtolower($message))) {
+            return "Today's date is " . date('F jS, Y');
+        } elseif (preg_match('[time|What is the time|what says the time]', strtolower($message))) {
+            return "The time is " . date('h:i A');
+        } elseif (preg_match('[who is the governor of ]', strtolower($message))) {
+            $keywords = preg_split("/[\s,]+/", strtolower($message));
+            foreach ($this->governors as $key => $value) {
+                foreach ($keywords as $v) {
+                    if (strtolower($v) === strtolower($key)) {
+                        return $value;
+                    }
+
+                }
+            }
+            return "I don't know, ask Google";
         } else {
             return 'Define your own logic to reply to this message: ' . $message;
         }
     }
-
-    /**
-     * Get the answer to the user's message with help from api.ai
-     * @param string message
-     * @return string
-     */
-    public function getApiAIAnswer($message)
-    {
-        try {
-
-            $query = $this->apiClient->get('query', [
-                'query' => $message,
-            ]);
-
-            $response = json_decode((string)$query->getBody(), true);
-
-            return $response['result']['fulfillment']['speech'];
-        } catch (\Exception $error) {
-            $this->log->warning($error->getMessage());
-        }
-    }
-
-    /**
-     * Get the answer to the user's message with help from wit.ai
-     * @param $message
-     * @return string
-     */
-    public function getWitAIAnswer($message)
-    {
-        try {
-
-            $response = $this->witClient->get('/message', [
-                'q' => $message,
-            ]);
-
-            // Get the decoded body
-            $response = json_decode((string)$response->getBody(), true);
-            $intent = $response['entities']['intent'][0]['value'] ?? 'no intent recognized';
-        } catch (\Exception $error) {
-            $this->log->warning($error->getMessage());
-        }
-
-        return 'The intent of the message: ' . $intent;
-    }
-
-    /**
-     * Get the foreign rates based on the users base (EUR, USD...)
-     * @param $message
-     * @return string
-     */
-    public function getForeignExchangeRateAnswer($message)
-    {
-        return $this->foreignExchangerate->getRates($message);
-    }
-
 
 }

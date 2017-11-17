@@ -24,7 +24,8 @@ class ChatbotHelper
         $dotenv->load();
         $this->accessToken = getenv('PAGE_ACCESS_TOKEN');
         $this->config = include('config.php');
-        $this->chatbotAI = new ChatbotAI($this->config);
+        $this->governors = include ('governors.php');
+        $this->chatbotAI = new ChatbotAI($this->config,$this->governors);
         $this->facebookSend = new FacebookSend();
         $this->log = new Logger('general');
         $this->log->pushHandler(new StreamHandler('debug.log'));

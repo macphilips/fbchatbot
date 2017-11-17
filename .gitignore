@@ -1,0 +1,6 @@
+composer.phar
+phpunit.phar
+/tests/
+/vendor/
+.idea
+.env

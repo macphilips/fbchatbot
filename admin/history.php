@@ -6,13 +6,13 @@
  * Time: 6:06 PM
  */
 
+use App\dao\DatabaseHelper;
+
 require_once($_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php');
-use App\DatabaseHelper;
 
 $database = new DatabaseHelper();
-$users = $database->getUsers();
-foreach ($users as $user)
-    echo json_encode($user->getJsonStr()).'<br/>';
+$users = $database->getUser('2178859302139932');
+echo $users;
 
 
 

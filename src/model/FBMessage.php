@@ -7,11 +7,12 @@
  * Time: 10:29 PM
  */
 
-namespace App;
+namespace App\model;
 
 class FBMessage
 {
     private $senderID;
+
     private $status;
     private $message;
     private $mid;

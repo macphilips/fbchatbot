@@ -1,0 +1,9 @@
+# Turn rewrite engine on
+Options +FollowSymlinks
+RewriteEngine on
+# map neat URL to internal URL
+
+RewriteRule ^home$   admin/index.php [nc,qsa]
+RewriteRule ^users/$   admin/RestController.php?url=users [nc,qsa]
+RewriteRule ^user/([0-9]+)/$   admin/RestController.php?url=user&id=$1 [nc,qsa]
+RewriteRule    ^user/([0-9]+)/([A-Za-z0-9-]+)/?$    admin/RestController.php?url=$2&id=$1 [NC,L]

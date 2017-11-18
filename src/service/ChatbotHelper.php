@@ -1,8 +1,10 @@
 <?php
 
-namespace App;
+namespace App\service;
 
 
+use App\model\FBMessage;
+use App\model\FBUser;
 use Dotenv\Dotenv;
 use Facebook\Exceptions\FacebookResponseException;
 use Facebook\Exceptions\FacebookSDKException;
@@ -21,11 +23,11 @@ class ChatbotHelper
 
     public function __construct()
     {
-        $dotenv = new Dotenv(dirname(__FILE__, 2));
+        $dotenv = new Dotenv(dirname(__FILE__, 3));
         $dotenv->load();
         $this->accessToken = getenv('PAGE_ACCESS_TOKEN');
-        $this->config = include('config.php');
-        $this->governors = include('governors.php');
+        $this->config = include(dirname(__FILE__, 2).'/include/config.php');
+        $this->governors = include(dirname(__FILE__, 2).'/include/governors.php');
         $this->chatbotAI = new ChatbotAI($this->config, $this->governors);
         $this->facebookSend = new FacebookSend();
         $this->log = new Logger('general');
@@ -131,9 +133,9 @@ class ChatbotHelper
         $hubChallenge = $request['hub_challenge'];
 
         if (isset($hubChallenge) && $hubVerifyToken == $this->config['webhook_verify_token']) {
-
             echo $hubChallenge;
         }
+        return '';
 
     }
 

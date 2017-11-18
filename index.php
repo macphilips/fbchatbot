@@ -1,9 +1,9 @@
 <?php
 
 require_once __DIR__ . '/vendor/autoload.php';
-use App\ChatbotHelper;
-use App\DatabaseHelper;
-use App\FBMessage;
+use App\dao\DatabaseHelper;
+use App\model\FBMessage;
+use App\service\ChatbotHelper;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 

@@ -6,9 +6,11 @@
  * Time: 6:23 PM
  */
 
-namespace App;
+namespace App\dao;
 
 
+use App\model\FBMessage;
+use App\model\FBUser;
 use Dotenv\Dotenv;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -60,7 +62,7 @@ class DatabaseHelper
         $stmt->bindParam(':id', $userID);
 
 
-        $execute = $stmt->execute();
+        $stmt->execute();
         //$this->log->debug("saveUser", array($execute));
     }
 
@@ -84,7 +86,7 @@ class DatabaseHelper
         $message = $msg->getMessage();
         $mid = $msg->getMid();
 
-        $execute = $stmt->execute();
+        $stmt->execute();
         // $this->log->debug("saveMessage", array($execute));
     }
 
@@ -94,17 +96,15 @@ class DatabaseHelper
      */
     public function userExists($id)
     {
-        if ($this->conn) {
-            $stmt = $this->conn->prepare('SELECT COUNT(*) AS result FROM users WHERE id = :id');
-            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $stmt->execute();
-            $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
-            $result = $stmt->fetchAll();
-            if ($result[0]['result'] == 0) {
-                return false;
-            } else {
-                return $this->getUser($id);
-            }
+        $stmt = $this->conn->prepare('SELECT COUNT(*) AS result FROM users WHERE id = :id');
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $result = $stmt->fetchAll();
+        if ($result[0]['result'] == 0) {
+            return false;
+        } else {
+            return $this->getUser($id);
         }
     }
 
@@ -114,14 +114,15 @@ class DatabaseHelper
      */
     public function getUser($id)
     {
-        $stmt = $this->conn->prepare('SELECT id,first_name,profile_pic,last_name,gender FROM users WHERE id = :id');
+        $stmt = $this->conn->prepare('SELECT * FROM users WHERE id = :id');
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $result = $stmt->fetchAll();
-        $user = new FBUser();
         $var = $result[0];
 
+        $user = new FBUser();
+        $this->log->debug('getUser => ', array($result));
         $user->setUserID($var['id']);
         $user->setLastName($var['last_name']);
         $user->setFirstName($var['first_name']);
@@ -142,7 +143,6 @@ class DatabaseHelper
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $result = $stmt->fetchAll();
-
         $users = array();
         foreach ($result as $var) {
             $user = new FBUser();
@@ -154,8 +154,6 @@ class DatabaseHelper
             $users[] = $user;
             //  $this->log->debug("getting List of Users => ", array($var));
         }
-
-
         return $users;
     }
 
@@ -174,7 +172,7 @@ class DatabaseHelper
         $time = $message->getTime();
         $mid = $message->getMid();
 
-        $result = $stmt->execute();
+        $stmt->execute();
     }
 
     /**
@@ -199,22 +197,26 @@ class DatabaseHelper
         return $msg;
     }
 
+    /**
+     * @param $id
+     * @return array|FBMessage
+     */
     public function getMessageHistory($id)
     {
         $stmt = $this->conn->prepare('SELECT * FROM message_history WHERE sender_id = :id');
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $result = $stmt->execute();
-        $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $result = $stmt->fetchAll();
         $messages = array();
         foreach ($result as $value) {
             $msg = new FBMessage();
-            $msg->setStatus($value['direction']);
+            $msg->setStatus($value['status']);
             $msg->setMid($value['mid']);
             $msg->setMessage($value['message']);
-            $msg->setTime($value['mid']);
+            $msg->setTime($value['time']);
             $msg->setSenderID('sender_id');
-            $messages[] = $value;
+            $messages[] = $msg;
         }
         return $messages;
     }
@@ -254,7 +256,7 @@ class DatabaseHelper
 
     function __construct()
     {
-        $dotenv = new Dotenv(dirname(__FILE__, 2));
+        $dotenv = new Dotenv(dirname(__FILE__, 3));
         $dotenv->load();
         $this->dsn = getenv('DSN');
         $this->username = getenv('DB_USERNAME');

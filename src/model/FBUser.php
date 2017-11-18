@@ -6,10 +6,8 @@
  * Time: 7:11 PM
  */
 
-namespace App;
+namespace App\model;
 
-
-use RedBeanPHP\OODBBean;
 
 class FBUser
 {
@@ -25,6 +23,19 @@ class FBUser
     public function getUserID()
     {
         return $this->userID;
+    }
+
+    function __toString()
+    {
+        // TODO: Implement __toString() method.
+        $str = '';
+        $str .= '[' . '<br/>';
+        $str .= 'userID => ' . $this->userID . '<br/>';
+        $str .= 'profile_pic => ' . $this->profile . '<br/>';
+        $str .= 'first_name => ' . $this->first_name . '<br/>';
+        $str .= 'last_name => ' . $this->last_name . '<br/>';
+        $str .= ']<br/>';
+        return $str;
     }
 
     /**
@@ -98,6 +109,7 @@ class FBUser
     {
         $this->last_name = $last_name;
     }
+
 
     function __construct()
     {

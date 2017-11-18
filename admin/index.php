@@ -4,9 +4,9 @@
     <title>
 
     </title>
-    <script src="jquery.js"></script>
-    <script src="underscore.js"></script>
-    <script src="backbone.js"></script>
+    <script src="../resource/js/jquery.js"></script>
+    <script src="../resource/js/underscore.js"></script>
+    <script src="../resource/js/backbone.js"></script>
     <style type="text/css">
         body {
             margin: 0;
@@ -49,29 +49,29 @@
     var appleData = [
         {
             name: 'fuji',
-            url: 'img/fuji.jpg'
+            url: '../resource/img/fuji.jpg'
         },
         {
             name: 'gala',
-            url: 'img/gala.png'
+            url: '../resource/img/gala.png'
         }
     ]
 
-    var app
-    var Apples = Backbone.Collection.extend({})
+    var app;
+    var Apples = Backbone.Collection.extend({});
     var router = Backbone.Router.extend({
         routes: {
             '': 'home',
             'apples/:appleName': 'loadApple'
         },
         initialize: function () {
-            var apples = new Apples()
-            apples.reset(appleData)
-            this.homeView = new homeView({collection: apples})
-            this.appleView = new appleView({collection: apples})
+            var apples = new Apples();
+            apples.reset(appleData);
+            this.homeView = new homeView({collection: apples});
+            this.appleView = new appleView({collection: apples});
         },
         home: function () {
-            this.homeView.render()
+            this.homeView.render();
         },
         loadApple: function (appleName) {
             this.appleView.render(appleName)
@@ -95,14 +95,14 @@
                                 <figcaption><%= attributes.name %></figcaption>\
                               </figure>'),
         render: function (appleName) {
-            var appleModel = this.collection.where({name: appleName})[0]
-            var appleHtml = this.template(appleModel)
+            var appleModel = this.collection.where({name: appleName})[0];
+            var appleHtml = this.template(appleModel);
             $('#content').html(appleHtml)
         }
     })
 
     $(document).ready(function () {
-        app = new router
+        app = new router;
         Backbone.history.start()
     })
 

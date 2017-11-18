@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\service;
 
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -39,9 +39,13 @@ class FacebookSend
 
         // Attach JSON string to post fields.
         curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonDataEncoded);
+        $headers = array();
+        $headers[] = 'Accept: application/json';
+        $headers[] = 'Content-Type: application/json';
 
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         // Set the content type
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 

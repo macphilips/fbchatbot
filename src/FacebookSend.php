@@ -24,6 +24,7 @@ class FacebookSend
      * @param string $senderId
      * @param string $replyMessage
      * @internal param string $jsonDataEncoded
+     * @return mixed
      */
     public function send(string $accessToken, string $senderId, string $replyMessage)
     {
@@ -42,14 +43,18 @@ class FacebookSend
         // Set the content type
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
 
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
         // Execute
-        curl_exec($ch);
+       $result = curl_exec($ch);
+
 
         if (curl_error($ch)) {
             $this->log->warning('Send Facebook Curl error: ' . curl_error($ch));
         }
 
         curl_close($ch);
+        return $result;
     }
 
 }

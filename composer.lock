@@ -4,8 +4,43 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "042787ec08f2f432b610c913d6b5b6e0",
+    "content-hash": "84a73de9e18ed4e19baf403175487770",
     "packages": [
+        {
+            "name": "diversen/redbean-composer",
+            "version": "4.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/diversen/redbean-composer.git",
+                "reference": "96b6de8f547448da0e4317fca1ed686e8f067ab8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/diversen/redbean-composer/zipball/96b6de8f547448da0e4317fca1ed686e8f067ab8",
+                "reference": "96b6de8f547448da0e4317fca1ed686e8f067ab8",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "DUAL Licensed New BSD and GPLv2"
+            ],
+            "authors": [
+                {
+                    "name": "gabordemooij",
+                    "homepage": "https://github.com/gabordemooij/redbean",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Latest Redbeanphp as a simgle file ",
+            "homepage": "http://github.com/diversen/redbean-composer",
+            "keywords": [
+                "composer",
+                "orm",
+                "redbean"
+            ],
+            "time": "2016-06-16T12:56:33+00:00"
+        },
         {
             "name": "doctrine/instantiator",
             "version": "1.0.5",

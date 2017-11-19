@@ -36,7 +36,8 @@ class MessageHandler extends BaseRESTHandler
             /** @var FBMessageFacade $item */
             $messageArray[] = $item->toJsonString();
         }
-        $response = json_encode(array('name' => $this->facadeService->getUser($userID)->getName(),
+        $user = $this->facadeService->getUser($userID);
+        $response = json_encode(array('name' => $user->getName(), 'profile_pic' => $user->getProfile(),
             'messages' => $messageArray));
         $this->setHttpHeaders('application/json; charset=UTF-8', $statusCode);
         echo $response;

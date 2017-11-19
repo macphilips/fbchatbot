@@ -64,7 +64,7 @@ class FBMessageFacade
     /**
      * @return mixed
      */
-    public function getTime():string
+    public function getTime(): float
     {
         return $this->time;
     }
@@ -81,12 +81,12 @@ class FBMessageFacade
 
     public function toJsonString()
     {
-        return json_encode(array(
+        return (array(
             'message' => $this->getMessage(),
-            'time' => $this->getTime(),
+            'time' =>  ($this->getTime()),
             'status' => $this->getStatus(),
             'sender_id' => $this->getSenderId(),
-            ));
+        ));
 
     }
 }

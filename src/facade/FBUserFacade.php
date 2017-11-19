@@ -11,7 +11,7 @@ namespace App\facade;
 
 class FBUserFacade
 {
-    private $name, $profile, $id;
+    private $name, $profile, $id, $last_msg;
 
     /**
      * @return mixed
@@ -61,12 +61,29 @@ class FBUserFacade
         $this->id = $id;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getLastMsg()
+    {
+        return $this->last_msg;
+    }
+
+    /**
+     * @param mixed $last_msg
+     */
+    public function setLastMsg($last_msg)
+    {
+        $this->last_msg = $last_msg;
+    }
+
     public function toJSON()
     {
-        return json_encode(array(
+        return (array(
             'id' => $this->getId(),
             'name' => $this->getName(),
-            'profile' => $this->getProfile()
+            'profile' => $this->getProfile(),
+            'last_message' => $this->getLastMsg()
         ));
     }
 }

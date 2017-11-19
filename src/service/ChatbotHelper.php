@@ -26,8 +26,8 @@ class ChatbotHelper
         $dotenv = new Dotenv(dirname(__FILE__, 3));
         $dotenv->load();
         $this->accessToken = getenv('PAGE_ACCESS_TOKEN');
-        $this->config = include(dirname(__FILE__, 2).'/include/config.php');
-        $this->governors = include(dirname(__FILE__, 2).'/include/governors.php');
+        $this->config = include(dirname(__FILE__, 2) . '/include/config.php');
+        $this->governors = include(dirname(__FILE__, 2) . '/include/governors.php');
         $this->chatbotAI = new ChatbotAI($this->config, $this->governors);
         $this->facebookSend = new FacebookSend();
         $this->log = new Logger('general');
@@ -53,11 +53,13 @@ class ChatbotHelper
     public function getMessage($input)
     {
         $message = new FBMessage();
-        $inputdata = $input['entry'][0]['messaging'][0];
-        $message->setMessage($inputdata['message']['text']);
-        $message->setMid($inputdata['message']['mid']);
-        $message->setSenderID($inputdata['sender']['id']);
-        $message->setTime($inputdata['timestamp']);
+        $messageData = $input['entry'][0]['messaging'][0];
+
+        $message->setMessage($messageData['message']['text']);
+        $message->setMid($messageData['message']['mid']);
+        $message->setSenderID($messageData['sender']['id']);
+        $message->setTime($messageData['timestamp']);
+        $this->log->debug('getMessage => ', array($messageData['timestamp']));
         return $message;
     }
 
@@ -137,76 +139,6 @@ class ChatbotHelper
         }
         return '';
 
-    }
-
-    /**
-     * @param $id string
-     * @return FBUser
-     */
-    public function getUsersProfile($id)
-    {        //$id = "4";
-        $app_secret = $this->config["app_secret"];
-        $app_id = $this->config["app_id"];
-        $access_token = $this->config["access_token"];
-
-        $fb = new Facebook([
-            'app_id' => "$app_id",
-            'app_secret' => "$app_secret",
-            'default_graph_version' => 'v2.10',
-            //'default_access_token' => '{access-token}', // optional
-        ]);
-
-        try {
-            $response = $fb->get(
-                "/$id",
-                "$access_token"
-            );
-        } catch (FacebookResponseException $e) {
-            echo 'Graph returned an error: ' . $e->getMessage();
-            exit;
-        } catch (FacebookSDKException $e) {
-            echo 'Facebook SDK returned an error: ' . $e->getMessage();
-            exit;
-        }
-        $graphNode = $response->getGraphNode();
-
-        $user = new FBUser();
-        $user->setUserID($id);
-        $first_name = $graphNode->getField("first_name");
-        $last_name = $graphNode->getField('last_name');
-        $profile_pic = $graphNode->getField('profile_pic');
-        $gender = $graphNode->getField('gender');
-        $name = $graphNode->getField("name");
-
-        if (isset($first_name)) {
-            $user->setFirstName($first_name);
-            $user->setLastName($last_name);
-        } elseif (isset($name)) {
-            $keys = preg_split('[\s]', $name);
-            if (count($keys) == 2) {
-                $user->setFirstName($keys[0]);
-                $user->setLastName($keys[1]);
-            } else {
-                $user->setFirstName($name);
-                $user->setLastName(' ');
-            }
-        } else {
-            $user->setFirstName('Stranger');
-            $user->setLastName(' ');
-        }
-        if (isset($profile_pic)) {
-            $user->setProfile($profile_pic);
-        } else {
-            $user->setProfile('point to a default profile pix');
-        }
-        if (isset($gender)) {
-            $user->setGender($gender);
-        } else {
-            $user->setGender('NA');
-        }
-
-        $this->log->debug("ChatbotHelper.getUserProfile => ", array($user));
-        return $user;
     }
 
     /**

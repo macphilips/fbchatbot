@@ -43,8 +43,10 @@ class UserHandler extends BaseRESTHandler
             $userArray[] = $user->toJSON();
         }
         $response = json_encode($userArray);
-        // $requestContentType = $_SERVER['HTTP_ACCEPT'];
-        $this->setHttpHeaders('application/json', $statusCode);
+
+        $this->setHttpHeaders('application/json; charset=utf-8', $statusCode);
+        //$this->setHttpHeaders('text/plain', $statusCode);
+
         $this->log->debug("UserHandler => ", array($response));
         echo $response;
 

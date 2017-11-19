@@ -1,110 +1,52 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
 <head>
-    <title>
+    <meta charset="UTF-8">
+    <title>Chat Widget</title>
 
-    </title>
-    <script src="../resource/js/jquery.js"></script>
-    <script src="../resource/js/underscore.js"></script>
-    <script src="../resource/js/backbone.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+    <link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css'>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link type="text/css" rel="stylesheet" href="../chatbot/resource/css/style.css"/>
     <style type="text/css">
-        body {
+        body, h1, h2, h3, h4, h5, h6 {
+            font-family: "Raleway", sans-serif
+        }
+        body{
+            padding: 0;
             margin: 0;
-        }
-
-        #side-nav {
-            float: left;
-            width: 20%;
-            height: 100%;
-            position: fixed;
-            background: yellow;
-        }
-
-        h1 {
-
-            margin-top: 0;
-
-        }
-
-        #content {
-            margin-left: 20%;
-            background: burlywood;
         }
     </style>
 </head>
+
 <body>
-<div id="main">
-    <div id="side-nav">
+<div class="container clearfix">
+    <div class="people-list" id="people-list">
+        <ul id="people-list-content" class="list"></ul>
+    </div>
 
-    </div>
-    <div id="content">
-        <h1>
-            Main Content
-        </h1>
-    </div>
+    <div class="chat">
+        <div id="chat-header" class="chat-header clearfix">
+        </div> <!-- end chat-header -->
+
+        <div id="chat-history" class="chat-history">
+            <ul id="chat-history-content"></ul>
+        </div> <!-- end chat-history -->
+        <div class="clearfix"></div>
+
+
+
+    </div> <!-- end chat -->
+
 </div>
+<!-- end container -->
+
+<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.0/handlebars.min.js'></script>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/list.js/1.1.1/list.min.js'></script>
+
+<script src="../chatbot/resource/js/index.js"></script>
+
 </body>
-<script type="text/javascript">
-
-    var appleData = [
-        {
-            name: 'fuji',
-            url: '../resource/img/fuji.jpg'
-        },
-        {
-            name: 'gala',
-            url: '../resource/img/gala.png'
-        }
-    ]
-
-    var app;
-    var Apples = Backbone.Collection.extend({});
-    var router = Backbone.Router.extend({
-        routes: {
-            '': 'home',
-            'apples/:appleName': 'loadApple'
-        },
-        initialize: function () {
-            var apples = new Apples();
-            apples.reset(appleData);
-            this.homeView = new homeView({collection: apples});
-            this.appleView = new appleView({collection: apples});
-        },
-        home: function () {
-            this.homeView.render();
-        },
-        loadApple: function (appleName) {
-            this.appleView.render(appleName)
-        }
-    })
-    var homeView = Backbone.View.extend({
-        el: '#side-nav',
-        template: _.template(' <%= data %>'),
-        render: function () {
-            this.$el.html(this.template({
-                data: JSON.stringify(this.collection.models)
-            }))
-        }
-    })
-
-
-
-    var appleView = Backbone.View.extend({
-        template: _.template('<figure>\ \
-                                <img src="<%= attributes.url%>"/>\
-                                <figcaption><%= attributes.name %></figcaption>\
-                              </figure>'),
-        render: function (appleName) {
-            var appleModel = this.collection.where({name: appleName})[0];
-            var appleHtml = this.template(appleModel);
-            $('#content').html(appleHtml)
-        }
-    })
-
-    $(document).ready(function () {
-        app = new router;
-        Backbone.history.start()
-    })
-
-</script>
 </html>

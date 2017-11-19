@@ -7,9 +7,6 @@ use App\api\MessageHandler;
 use App\api\RedirectHelper;
 use App\api\UserHandler;
 
-$view = "";
-if (isset($_GET["view"]))
-    $view = $_GET["view"];
 $url = "";
 if (isset($_GET["url"]))
     $url = $_GET["url"];

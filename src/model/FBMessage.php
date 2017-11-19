@@ -109,7 +109,7 @@ class FBMessage
     }
 
     /**
-     * @return int
+     * @return float
      */
     public function getTime(): float
     {

@@ -36,7 +36,7 @@ class DefaultFacadeService implements FacadeService
             $sender_id = $message->getSenderID();
             $msgFacade->setMessage($message->getMessage());
             $msgFacade->setStatus($message->getStatus());
-            $msgFacade->setSenderId($sender_id);
+            $msgFacade->setSenderId($userID);
             $msgFacade->setTime($message->getTime());
             $msgFacades[] = $msgFacade;
         }
@@ -52,7 +52,10 @@ class DefaultFacadeService implements FacadeService
         $user_facade->setName($fbUser->getFirstName() . ' ' . $fbUser->getLastName());
         $user_facade->setProfile($fbUser->getProfile());
         $user_facade->setId($fbUser->getUserID());
-
+        $messageHistory = $this->getMessageHistory($userID);
+        /** @var FBMessageFacade $lst_mgs */
+        $lst_mgs = $messageHistory[count($messageHistory) - 1];
+        $user_facade->setLastMsg($lst_mgs->getMessage());
         return $user_facade;
     }
 
@@ -66,6 +69,10 @@ class DefaultFacadeService implements FacadeService
             $user_facade->setName($fbUser->getFirstName() . ' ' . $fbUser->getLastName());
             $user_facade->setProfile($fbUser->getProfile());
             $user_facade->setId($fbUser->getUserID());
+            $messageHistory = $this->getMessageHistory($fbUser->getUserID());
+            /** @var FBMessageFacade $lst_mgs */
+            $lst_mgs = $messageHistory[count($messageHistory) - 1];
+            $user_facade->setLastMsg($lst_mgs->getMessage());
             $user_facades[] = $user_facade;
         }
         return $user_facades;

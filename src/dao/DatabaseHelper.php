@@ -72,12 +72,12 @@ class DatabaseHelper
     public function saveMessage($msg)
     {
         // prepare sql and bind parameters
-        $stmt = $this->conn->prepare("INSERT INTO message_history (sender_id, status, message,time,mid) VALUES (:sender_id, :direction, :message, :time,:mid)");
+        $stmt = $this->conn->prepare("INSERT INTO message_history (sender_id, status, message,time,mid) VALUES (:sender_id, :direction, :message, :times,:mid)");
 
         $stmt->bindParam(':sender_id', $senderID);
         $stmt->bindParam(':direction', $direction);
         $stmt->bindParam(':message', $message);
-        $stmt->bindParam(':time', $time);
+        $stmt->bindParam(':times', $time);
         $stmt->bindParam(':mid', $mid);
 
         $senderID = $msg->getSenderID();

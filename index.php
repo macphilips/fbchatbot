@@ -4,6 +4,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use App\dao\DatabaseHelper;
 use App\model\FBMessage;
 use App\service\ChatbotHelper;
+use App\service\FacebookGraphHelper;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
@@ -26,7 +27,7 @@ if ($senderId && $chatbotHelper->hasNewMessageReceipt($input)) {
     $log->debug('new message', array($input));
     $user = $database->userExists($senderId);
     if (!$user) {
-        $user = $chatbotHelper->getUsersProfile($senderId);
+        $user = FacebookGraphHelper:: getUsersProfile($senderId);
         $database->saveUser($user);
     }
     $message = $chatbotHelper->getMessage($input);

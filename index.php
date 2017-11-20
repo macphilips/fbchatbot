@@ -5,12 +5,24 @@ use App\dao\DatabaseHelper;
 use App\model\FBMessage;
 use App\service\ChatbotHelper;
 use App\service\FacebookGraphHelper;
+use Dotenv\Dotenv;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
 // Create the chatbot helper instance
 $chatbotHelper = new ChatbotHelper();
 $database = new DatabaseHelper();
+
+function saveFbPageName()
+{
+    $dotenv = new Dotenv(dirname(__FILE__, 3));
+    $dotenv->load();
+    $page = getenv('PAGE_NAME');
+    if (!isset($page)){
+      $page  = FacebookGraphHelper::getUsersProfile('me');
+      putenv('PAGE_NAME='.$page);
+    }
+}
 
 // Facebook webhook verification
 $chatbotHelper->verifyWebhook($_REQUEST);
@@ -24,33 +36,31 @@ $log->pushHandler(new StreamHandler('debug.log'));
 $senderId = $chatbotHelper->getSenderId($input);
 
 if ($senderId && $chatbotHelper->hasNewMessageReceipt($input)) {
-    $log->debug('new message', array($input));
-    $user = $database->userExists($senderId);
-    if (!$user) {
-        $user = FacebookGraphHelper:: getUsersProfile($senderId);
-        $database->saveUser($user);
-    }
+
     $message = $chatbotHelper->getMessage($input);
     $message->setStatus('received');
-    $database->saveMessage($message);
 
     $replyMessage = new FBMessage();
-    $msg = $chatbotHelper->getAnswer($message->getMessage(), $user->getFirstName());
+    $msg = $chatbotHelper->getAnswer($message->getMessage(),  $message->getSenderID());
     $replyMessage->setMessage($msg);
     $replyMessage->setSenderID($senderId);
     $replyMessage->setStatus('sent');
+
+
+    $database->saveMessage($message);
     $send = $chatbotHelper->send($senderId, $msg);
     $response = json_decode($send);
+
     foreach ($response as $key => $k) {
         if ($key == 'message_id') {
             $replyMessage->setMid($k);
         }
     }
+
     $database->saveMessage($replyMessage);
 }
 
 if ($senderId && $chatbotHelper->hasDeliveryMessageReceipt($input)) {
-    $log->debug('delivery receipt', array($input));
     $receipt = $chatbotHelper->getDeliveryReceipt($input);
     $message = $database->getMessage($receipt['mid']);
     $message->setTime($receipt['time']);

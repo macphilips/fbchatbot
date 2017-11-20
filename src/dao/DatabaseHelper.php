@@ -122,7 +122,6 @@ class DatabaseHelper
         $var = $result[0];
 
         $user = new FBUser();
-        $this->log->debug('getUser => ', array($result));
         $user->setUserID($var['id']);
         $user->setLastName($var['last_name']);
         $user->setFirstName($var['first_name']);
@@ -186,7 +185,6 @@ class DatabaseHelper
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $value = $stmt->fetchAll()[0];
-        $this->log->debug('getMessage', array($mid, $value));
         $msg = new FBMessage();
         $msg->setStatus($value['status']);
         $msg->setMid($value['mid']);

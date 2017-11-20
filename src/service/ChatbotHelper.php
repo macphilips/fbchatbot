@@ -26,6 +26,7 @@ class ChatbotHelper
         $dotenv = new Dotenv(dirname(__FILE__, 3));
         $dotenv->load();
         $this->accessToken = getenv('PAGE_ACCESS_TOKEN');
+
         $this->config = include(dirname(__FILE__, 2) . '/include/config.php');
         $this->governors = include(dirname(__FILE__, 2) . '/include/governors.php');
         $this->chatbotAI = new ChatbotAI($this->config, $this->governors);
@@ -59,7 +60,7 @@ class ChatbotHelper
         $message->setMid($messageData['message']['mid']);
         $message->setSenderID($messageData['sender']['id']);
         $message->setTime($messageData['timestamp']);
-        $this->log->debug('getMessage => ', array($messageData['timestamp']));
+
         return $message;
     }
 

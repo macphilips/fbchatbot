@@ -1,7 +1,6 @@
 <?php
 
-
-require_once($_SERVER['DOCUMENT_ROOT'] . '/chatbot' . '/vendor/autoload.php');
+require_once(dirname(__FILE__, 2) . '../vendor/autoload.php');
 
 use App\api\MessageHandler;
 use App\api\RedirectHelper;

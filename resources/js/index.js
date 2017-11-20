@@ -10,8 +10,7 @@ function parseUserData(data) {
         '<img class="profile-size round-50p center-cropped" src="' + profile_pic + '" alt="' + name + '"/>' +
         '<div class="about">' +
         '<div class="name">' + name + '</div>' +
-        '<div class="status">' + '<i class="fa fa-circle online"></i> '+last_message
-        + '</div>' +
+        //'<div class="status">' + '<i class="fa fa-circle online"></i> '+last_message        + '</div>' +
         '</div>' +
         '</div>' +
         '</li>';
@@ -86,6 +85,8 @@ function setChats(data) {
 function receivedChatBoxTemplate(data) {
     var message = data.message;
     var time = data.time;
+
+    var d = new Date(time);
     return '<li> ' +
         '<div class="message-data">' +
         ' <span class="message-data-name">' +
